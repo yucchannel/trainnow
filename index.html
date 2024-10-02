@@ -10,7 +10,115 @@
         <h1>trainNow</h1>
     </header>
     <section id="delay-news">
+        <h2><!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrainNow - 電車遅延情報</title>
+</head>
+<body>
+    <header>
+        <h1>trainNow</h1>
+    </header>
+    <section id="delay-news">
         <h2>最新の遅延情報</h2>
+        <ul id="news-list">
+            <!-- 遅延情報がここに挿入されます -->
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 電車遅延ニュースtrainNow</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const newsList = document.getElementById('news-list');
+
+            // nTool train delay APIのURL
+            const apiUrl = "https://ntool.online/data/train_all.json";
+
+            // APIからデータを取得
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // trainsの配列を取得
+                    const trains = data.data; 
+                    trains.forEach(train => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <strong>路線名:</strong> ${train.railName} 
+                            <br><strong>会社名:</strong> ${train.companyName} 
+                            <br><strong>運行状況:</strong> ${train.status}
+                            <br><strong>詳細:</strong> ${train.info}
+                            <br><strong>遅延:</strong> ${train.delay} 分
+                            <br><strong>理由:</strong> ${train.reason || '不明'}`;
+                        newsList.appendChild(listItem);
+                    });
+
+                    const lastUpdated = new Date(data.lastUpdated * 1000);
+                    const updateMessage = document.createElement('p');
+                    updateMessage.textContent = `最終更新時間: ${lastUpdated.toLocaleString()}`;
+                    newsList.appendChild(updateMessage);
+                })
+                .catch(error => {
+                    console.error('エラーが発生しました:', error);
+                    const errorItem = document.createElement('li');
+                    errorItem.textContent = '遅延情報の取得に失敗しました。';
+                    newsList.appendChild(errorItem);
+                });
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        #delay-news {
+            margin: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #FFFFFF;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #ffdddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid red;
+        }
+
+        footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+    </style>
+</body>
+</html>
+</h2>
         <ul id="news-list">
             <!-- 遅延情報がここに挿入されます -->
         </ul>
